@@ -1,11 +1,12 @@
 defmodule DAY1 do
   def next_higher(pair)
 
-  def next_higher([hd|[tl|_x]]) do
-    cond do
-      tl > hd -> 1
-      true -> 0
-    end
+  def next_higher([hd|[tl|_x]]) when tl > hd do
+    1
+  end
+
+  def next_higher(_pair) do
+    0
   end
 end
 
