@@ -10,17 +10,15 @@ defmodule DAY1 do
   end
 end
 
-content = AOC_input.get_day_integers(1)
-
 #part1
-content
+AOC_input.get_day_integers(1)
 |> Enum.chunk_every(2, 1, :discard)
 |> Enum.map(&DAY1.next_higher/1)
 |> Enum.sum()
 |> IO.puts()
 
 #part2
-content
+AOC_input.get_day_integers(1)
 |> Enum.chunk_every(3, 1, :discard)
 |> Enum.map(&Enum.sum/1)
 |> Enum.chunk_every(2, 1, :discard)
