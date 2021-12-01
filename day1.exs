@@ -1,27 +1,28 @@
 defmodule DAY1 do
-  def count_up(rest, prev \\ nil, acc \\ nil)
+  def next_higher(pair)
 
-  def count_up([hd|tl], prev, _acc) when is_nil(prev) do
-    count_up(tl, hd, 0)
-  end
-
-  def count_up(rest, _prev, acc) when rest == [] do
-    acc
-  end
-
-  def count_up([hd|tl], prev, acc) when hd > prev do
-    count_up(tl, hd, acc+1)
-  end
-
-  def count_up([hd|tl], _prev, acc) do
-    count_up(tl, hd, acc)
+  def next_higher([hd|[tl|_x]]) do
+    cond do
+      tl > hd -> 1
+      true -> 0
+    end
   end
 end
 
 content = AOC_input.get_day_integers(1)
-part1 = DAY1.count_up(content)
-IO.puts(part1)
 
-second = content |> Enum.chunk_every(3, 1, :discard) |> Enum.map(&Enum.sum/1)
-part2 = DAY1.count_up(second)
-IO.puts(part2)
+#part1
+content
+|> Enum.chunk_every(2, 1, :discard)
+|> Enum.map(&DAY1.next_higher/1)
+|> Enum.sum()
+|> IO.puts()
+
+#part2
+content
+|> Enum.chunk_every(3, 1, :discard)
+|> Enum.map(&Enum.sum/1)
+|> Enum.chunk_every(2, 1, :discard)
+|> Enum.map(&DAY1.next_higher/1)
+|> Enum.sum()
+|> IO.puts()
