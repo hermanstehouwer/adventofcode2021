@@ -5,28 +5,30 @@ defmodule DAY2 do
     position
   end
 
-  def follow_course([{"forward", amount}|tl], true, {pos, depth, aim}) do
-    follow_course(tl, true, {pos+amount, depth+aim*amount, aim})
-  end
-
+  #Part 1 (do_aim: false)
   def follow_course([{"forward", amount}|tl], false, {pos, depth, aim}) do
     follow_course(tl, false, {pos+amount, depth, aim})
   end
 
-  def follow_course([{"down", amount}|tl], true, {pos, depth, aim}) do
-    follow_course(tl, true, {pos, depth, aim+amount})
+  def follow_course([{"up", amount}|tl], false, {pos, depth, aim}) do
+    follow_course(tl, false, {pos, depth-amount, aim})
   end
 
   def follow_course([{"down", amount}|tl], false, {pos, depth, aim}) do
     follow_course(tl, false, {pos, depth+amount, aim})
   end
 
+  #Part 2 (do_aim: true)
+  def follow_course([{"forward", amount}|tl], true, {pos, depth, aim}) do
+    follow_course(tl, true, {pos+amount, depth+aim*amount, aim})
+  end
+
   def follow_course([{"up", amount}|tl], true, {pos, depth, aim}) do
     follow_course(tl, true, {pos, depth, aim-amount})
   end
 
-  def follow_course([{"up", amount}|tl], false, {pos, depth, aim}) do
-    follow_course(tl, false, {pos, depth-amount, aim})
+  def follow_course([{"down", amount}|tl], true, {pos, depth, aim}) do
+    follow_course(tl, true, {pos, depth, aim+amount})
   end
 end
 
