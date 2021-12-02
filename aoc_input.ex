@@ -9,6 +9,16 @@ defmodule AOC_input do
   end
 
   def get_day_integers(day) do
-    Enum.map(get_day_simple(day), &String.to_integer/1)
+    get_day_simple(day) |> Enum.map(&String.to_integer/1)
+  end
+
+  def word_int_helper(word) do
+    [a, b] = String.split(word, " ", trim: true)
+    int = String.to_integer(b)
+    {a, int}
+  end
+
+  def get_day_split_word_int(day) do
+    get_day_simple(day) |> Enum.map(&word_int_helper/1)
   end
 end
