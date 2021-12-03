@@ -7,7 +7,7 @@ defmodule DAY3 do
   def binary_number_to_int(number) do Enum.map(number, &Integer.to_string/1) |> Enum.join("") |> String.to_integer(2) end
 
 
-  @spec reducer(list(binary_number), numlist()) :: numlist()
+  @spec reducer(binary_number, numlist) :: numlist()
   def reducer(to_add, acc)
 
   def reducer(to_add, acc) do

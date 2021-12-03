@@ -1,43 +1,39 @@
 defmodule DAY2 do
-  def follow_course(instructions, do_aim \\ false, position \\ {0,0,0})
-
-  def follow_course([], _do_aim, position) do
-    position
-  end
+  #instruction: {action, amount}
+  #position: {pos, depth, aim, do_aim}
+  def follow_course(instructions, position)
 
   #Part 1 (do_aim: false)
-  def follow_course([{"forward", amount}|tl], false, {pos, depth, aim}) do
-    follow_course(tl, false, {pos+amount, depth, aim})
+  def follow_course({"forward", amount}, {pos, depth, aim, false}) do
+    {pos+amount, depth, aim, false}
   end
 
-  def follow_course([{"up", amount}|tl],      false, {pos, depth, aim}) do
-    follow_course(tl, false, {pos, depth-amount, aim})
+  def follow_course({"up", amount}, {pos, depth, aim, false}) do
+    {pos, depth-amount, aim, false}
   end
 
-  def follow_course([{"down", amount}|tl],    false, {pos, depth, aim}) do
-    follow_course(tl, false, {pos, depth+amount, aim})
+  def follow_course({"down", amount}, {pos, depth, aim, false}) do
+    {pos, depth+amount, aim, false}
   end
 
   #Part 2 (do_aim: true)
-  def follow_course([{"forward", amount}|tl], true, {pos, depth, aim}) do
-    follow_course(tl, true, {pos+amount, depth+aim*amount, aim})
+  def follow_course({"forward", amount}, {pos, depth, aim, true}) do
+    {pos+amount, depth+aim*amount, aim, true}
   end
 
-  def follow_course([{"up", amount}|tl],      true, {pos, depth, aim}) do
-    follow_course(tl, true, {pos, depth, aim-amount})
+  def follow_course({"up", amount}, {pos, depth, aim, true}) do
+    {pos, depth, aim-amount, true}
   end
 
-  def follow_course([{"down", amount}|tl],    true, {pos, depth, aim}) do
-    follow_course(tl, true, {pos, depth, aim+amount})
+  def follow_course({"down", amount}, {pos, depth, aim, true}) do
+    {pos, depth, aim+amount, true}
   end
 end
 
-#part1
 input = AOC_input.get_day_split_word_int(2)
-{pos, depth, _aim} = DAY2.follow_course(input)
+{pos, depth, _aim, _do_aim} = input |> Enum.reduce({0,0,0,false}, &DAY2.follow_course/2)
 IO.puts(pos*depth)
 
 #part2
-input = AOC_input.get_day_split_word_int(2)
-{pos, depth, _aim} = DAY2.follow_course(input, true)
+{pos, depth, _aim, _do_aim} = input |> Enum.reduce({0,0,0,true}, &DAY2.follow_course/2)
 IO.puts(pos*depth)
