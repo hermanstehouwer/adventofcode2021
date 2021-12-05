@@ -40,15 +40,20 @@ defmodule Line do
   @spec get_points(Line.t(), boolean())::list(point())
   def get_points(line, do_diagonal \\ false)
 
-  def get_points(line, do_diagonal) do
-    {a,b} = line.start
-    {c,d} = line.end
-    cond do
-      a == c -> min(b,d)..max(b,d) |> Enum.map(fn x -> {a, x} end)
-      b == d -> min(a,c)..max(a,c) |> Enum.map(fn x -> {x, b} end)
-      do_diagonal -> diagonal_points(a,b,c,d)
-      true -> []
-    end
+  def get_points(%{start: {a, b}, end: {a, d}}, _do_diagonal) do
+    min(b,d)..max(b,d) |> Enum.map(fn x -> {a, x} end)
+  end
+
+  def get_points(%{start: {a, b}, end: {c, b}}, _do_diagonal) do
+    min(a,c)..max(a,c) |> Enum.map(fn x -> {x, b} end)
+  end
+
+  def get_points(%{start: {a, b}, end: {c, d}}, true) do
+    diagonal_points(a,b,c,d)
+  end
+
+  def get_points(_line, false) do
+    []
   end
 end
 
