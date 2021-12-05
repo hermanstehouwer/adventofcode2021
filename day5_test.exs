@@ -74,6 +74,6 @@ defmodule Testing do
     vents = Vents.from_strings(String.split(lines_in, "\n", trim: true))
     assert length(vents.lines) == 10
     assert length(Vents.get_overlap(vents)) == 5
-    #assert length(Vents.get_overlap(vents,true)) == 12
+    assert length(Vents.get_overlap(vents,true)) == 12
   end
 end
