@@ -6,13 +6,18 @@ defmodule Lanternfish do
    fishes: %{integer() => integer()}
   }
 
+  @spec combine_add_reducer(integer(), %{integer() => integer()})::%{integer() => integer()}
   def combine_add_reducer(days, acc) do
     Map.update(acc, days, 1, &(&1 + 1))
   end
 
+  @spec fromlist(list(integer()))::Lanternfish.t()
   def fromlist(list) do
     %Lanternfish{fishes: list |> Enum.reduce(%{}, &combine_add_reducer/2)}
   end
+
+  @spec step_fish({integer(), integer()}, %{integer() => integer()})::%{integer() => integer()}
+  def step_fish(day_count, acc)
 
   def step_fish({0, count}, acc) do
     Map.update(Map.merge(acc, %{8 => count}), 6, count, &(&1 + count))
