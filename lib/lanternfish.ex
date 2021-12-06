@@ -12,11 +12,11 @@ defmodule Lanternfish do
   end
 
   def step_fish({0, count}, acc) do
-    Map.update(Map.merge(acc, %{8 => count}), 6, count, fn old_count -> old_count + count end)
+    Map.update(Map.merge(acc, %{8 => count}), 6, count, &(&1 + count))
   end
 
   def step_fish({idx, count}, acc) do
-    Map.update(acc, idx-1, count, fn old_count -> old_count + count end)
+    Map.update(acc, idx-1, count, &(&1 + count))
   end
 
   @spec step(Lanternfish.t())::Lanternfish.t()
