@@ -6,9 +6,12 @@ defmodule Lanternfish do
    fishes: %{integer() => integer()}
   }
 
+  def combine_add_reducer(days, acc) do
+    Map.update(acc, days, 1, &(&1 + 1))
+  end
+
   def fromlist(list) do
-    fishes = list |> Enum.reduce(%{}, fn(days, acc) -> Map.update(acc, days, 1, &(&1 + 1)) end)
-    %Lanternfish{fishes: fishes}
+    %Lanternfish{fishes: list |> Enum.reduce(%{}, &combine_add_reducer/2)}
   end
 
   def step_fish({0, count}, acc) do
