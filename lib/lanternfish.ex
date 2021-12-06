@@ -21,9 +21,7 @@ defmodule Lanternfish do
 
   @spec step(Lanternfish.t())::Lanternfish.t()
   def step(fishes) do
-    new_fishes = Map.to_list(fishes.fishes)
-    |> Enum.reduce(%{}, &step_fish/2)
-    %Lanternfish{fishes | fishes: new_fishes}
+    %Lanternfish{fishes | fishes:  Map.to_list(fishes.fishes) |> Enum.reduce(%{}, &step_fish/2)}
   end
 
   @spec n_steps(Lanternfish.t(), integer())::Lanternfish.t()
