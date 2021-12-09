@@ -23,17 +23,22 @@ defmodule HM do
     |> Enum.sum()
   end
 
-  def coord_to_basin(heightmap, basin, to_process, processed)
-  def coord_to_basin(_heightmap, basin, [], _processed) do
+  def coord_to_basin(heightmap, basin, to_process)
+
+  def coord_to_basin(_heightmap, basin, []) do
     basin
   end
 
-  def coord_to_basin(heightmap, basin, [hd|tl], processed) do
+  def coord_to_basin(heightmap, basin, [hd|tl]) do
     coord_to_basin(
       heightmap,
-      basin ++ Enum.filter([hd], fn x -> Map.get(heightmap, x, 9) < 9 end),
-      tl ++ Enum.filter(get_neighbours(hd), fn x -> !(x in processed) and !(x in tl) and Map.get(heightmap, x, 9) < 9 end),
-      processed ++ [hd]
+      basin ++ [hd],
+      tl ++ Enum.filter(get_neighbours(hd),
+        fn x ->
+          !(x in basin)
+          and !(x in tl)
+          and Map.get(heightmap, x, 9) < 9
+        end)
     )
   end
 end

@@ -26,7 +26,7 @@ defmodule Testing do
 
   test "p2_test" do
     heightmap = test_map()
-    basins = HM.get_lowpoints(heightmap) |> Enum.map(fn x-> HM.coord_to_basin(heightmap, [], [x], []) end)
+    basins = HM.get_lowpoints(heightmap) |> Enum.map(fn x-> HM.coord_to_basin(heightmap, [], [x]) end)
     [a,b,c|_d] = Enum.map(basins, fn x -> length(x) end)
     |> Enum.sort()
     |> Enum.reverse()
