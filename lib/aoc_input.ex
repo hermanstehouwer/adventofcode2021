@@ -39,4 +39,23 @@ defmodule AOC_input do
   def get_day_char_split_int(day) do
     get_day_simple(day) |> Enum.map(&full_split_helper/1)
   end
+
+  def to_coord_map_ints(data, num)
+
+  def to_coord_map_ints([], x) do
+    []
+  end
+  def to_coord_map_ints([hd|tl], x) do
+    out = String.split(hd, "", trim: true)
+    |> Enum.map(&String.to_integer/1)
+    |> Enum.zip(0..String.length(hd))
+    |> Enum.map(fn {a,y} -> {{x,y},a} end)
+    out ++ to_coord_map_ints(tl, x+1)
+  end
+
+  def get_day_coord_map_ints(day) do
+    get_day_simple(day)
+    |> to_coord_map_ints(0)
+    |> Map.new()
+  end
 end
