@@ -37,11 +37,11 @@ defmodule Segments do
       {4, fn x, _s -> MapSet.size(x) == 4 end},
       {7, fn x, _s -> MapSet.size(x) == 3 end},
       {8, fn x, _s -> MapSet.size(x) == 7 end},
-      {9, fn x, s -> MapSet.size(x) == 6 and MapSet.subset?(s.encoder[4], x) end},
-      {0, fn x, s -> MapSet.size(x) == 6 and MapSet.subset?(s.encoder[1], x) end},
+      {9, fn x,  s -> MapSet.size(x) == 6 and MapSet.subset?(s.encoder[4], x) end},
+      {0, fn x,  s -> MapSet.size(x) == 6 and MapSet.subset?(s.encoder[1], x) end},
       {6, fn x, _s -> MapSet.size(x) == 6 end},
-      {3, fn x, s -> MapSet.size(x) == 5 and MapSet.subset?(s.encoder[1], x) end},
-      {5, fn x, s -> MapSet.size(x) == 5 and MapSet.subset?(x, s.encoder[6]) end},
+      {3, fn x,  s -> MapSet.size(x) == 5 and MapSet.subset?(s.encoder[1], x) end},
+      {5, fn x,  s -> MapSet.size(x) == 5 and MapSet.subset?(x, s.encoder[6]) end},
       {2, fn _x, _s -> true end}
     ]
     |> Enum.reduce({segments, input}, &f_and_s_reducer/2)
