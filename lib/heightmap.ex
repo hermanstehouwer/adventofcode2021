@@ -39,6 +39,6 @@ defmodule HM do
           and !(x in tl)
           and Map.get(heightmap, x, 9) < 9
         end)
-    )
+      )
   end
 end
