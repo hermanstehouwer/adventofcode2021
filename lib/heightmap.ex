@@ -35,9 +35,9 @@ defmodule HM do
       basin ++ [hd],
       tl ++ Enum.filter(get_neighbours(hd),
         fn x ->
-          !(x in basin)
-          and !(x in tl)
-          and Map.get(heightmap, x, 9) < 9
+          !(x in basin) and
+          !(x in tl) and
+          Map.get(heightmap, x, 9) < 9
         end)
       )
   end
