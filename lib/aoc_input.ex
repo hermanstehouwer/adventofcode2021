@@ -1,4 +1,5 @@
 defmodule AOC_input do
+
   def get_day_simple(day, trim \\ true)
 
   def get_day_simple(day, trim) when is_integer(day) do
@@ -9,6 +10,19 @@ defmodule AOC_input do
     {:ok, contents} = File.read("data/day"<> day <>".txt")
     contents |> String.split("\n", trim: trim)
   end
+
+  def get_day_double(day)
+
+  def get_day_double(day) when is_integer(day) do
+    get_day_double(Integer.to_string(day))
+  end
+
+  def get_day_double(day) do
+    {:ok, contents} = File.read("data/day"<> day <>".txt")
+    contents |> String.split("\n\n", trim: true)
+    |> Enum.map(fn x -> String.split(x, "\n", trim: true) end)
+  end
+
 
   def get_day_integers(day) do
     get_day_simple(day) |> Enum.map(&String.to_integer/1)
@@ -42,7 +56,7 @@ defmodule AOC_input do
 
   def to_coord_map_ints(data, num)
 
-  def to_coord_map_ints([], x) do
+  def to_coord_map_ints([], _num) do
     []
   end
   def to_coord_map_ints([hd|tl], x) do
