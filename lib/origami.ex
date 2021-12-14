@@ -17,6 +17,15 @@ defmodule Origami do
     end
   end
 
+  defp fold_num(a, x) when a < x do
+      a
+  end
+
+  defp fold_num(a, x) when a < x do
+      x - (a - x)
+  end
+
+
   defp process_instruction(instruction_list, coordinates)
 
   defp process_instruction(["fold along x", x], coordinates) do
