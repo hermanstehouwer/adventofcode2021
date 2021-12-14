@@ -9,19 +9,13 @@ defmodule Origami do
     |> Enum.reduce([], &input_to_paper_reducer/2)
   end
 
+  defp fold_num(a, x)
+
+  defp fold_num(a, x) when a < x do
+      a
+  end
+
   defp fold_num(a, x) do
-    if a < x do
-      a
-    else
-      x - (a - x)
-    end
-  end
-
-  defp fold_num(a, x) when a < x do
-      a
-  end
-
-  defp fold_num(a, x) when a < x do
       x - (a - x)
   end
 
