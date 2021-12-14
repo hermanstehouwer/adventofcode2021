@@ -27,11 +27,12 @@ defmodule Polymer do
     apply_rules(rules, output, times-1)
   end
 
-  def score(input) do
-    freq = Map.to_list(input) |> Enum.map(fn {{x,y}, z} -> [{x, z}] end)
+  def score(input, to_add_one_to) do
+    fre = Map.to_list(input) |> Enum.map(fn {{x,y}, z} -> [{x, z}] end)
     |> List.flatten()
     |> Enum.reduce(%{}, fn {a, z}, acc -> Map.update(acc, a, z, &(&1 + z)) end)
+    freq = Map.update(fre, to_add_one_to, 1, &(&1 +1))
     |> Enum.map(fn {_x,y} -> y end)
-    Enum.max(freq) - Enum.min(freq) + 1
+    Enum.max(freq) - Enum.min(freq)
   end
 end

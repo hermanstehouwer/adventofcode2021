@@ -27,15 +27,16 @@ CN -> C"
     [[part1], part2] = ex1() |> String.split("\n\n", trim: true) |> Enum.map(fn x -> String.split(x, "\n", trim: true) end)
     rules = Polymer.input_to_rules(part2)
 
-    IO.inspect(rules)
 
     [hd|tl] = String.split(part1, "", trim: true)
+    to_add_one_to = List.first(Enum.reverse(tl))
+
     input = Enum.zip([hd|tl], tl) |> Enum.frequencies()
 
     test3 = Polymer.apply_rules(rules, input, 10)
-    assert Polymer.score(test3) == 1588
+    assert Polymer.score(test3, to_add_one_to) == 1588
 
     test4 = Polymer.apply_rules(rules, input, 40)
-    assert Polymer.score(test4) == 2188189693529
+    assert Polymer.score(test4, to_add_one_to) == 2188189693529
   end
 end
