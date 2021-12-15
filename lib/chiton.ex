@@ -1,10 +1,9 @@
 defmodule Chiton do
   @type coordinate::{integer(), integer()}
 
+  @spec expand_map(%{coordinate() => integer})::%{coordinate() => integer()}
   def expand_map(map) do
-    IO.inspect("Expanding map 5 fold")
     {mx, my} = Map.keys(map) |> Enum.sort() |> List.last()
-
     tile_coords = Map.to_list(map)
     for x_xp <- 0..4 do
       for y_xp <- 0..4 do
@@ -22,76 +21,90 @@ defmodule Chiton do
     |> Map.new()
   end
 
+  @spec get_neighbours(coordinate(), coordinate())::[coordinate()]
   def get_neighbours({x,y}, {mx,my}) do
-    [{-1,0}, {1,0}, {0,-1}, {0,1}]
-    |> Enum.map(fn {c,d} -> {x+c, y+d} end)
-    |> Enum.filter(fn {c,d} -> c >= 0 and c<= mx and d >= 0 and d <= my end)
+    [{x-1,y}, {x + 1,y}, {x,y-1}, {x,y+1}]
+    |> Enum.reject(fn {c,d} -> c < 0 or c > mx or d < 0 or d > my end)
   end
 
-  def generate_neighbourmap({mx, my}) do
-    for x <- 0..mx do
-      for y <- 0..my do
-        {{x,y}, get_neighbours({x,y}, {mx, my})}
-      end
-    end
-    |> List.flatten()
-    |> Map.new()
-  end
-
+  @spec get_corner_distance(%{coordinate() => integer})::integer()
   def get_corner_distance(path_map) do
     tgt = Map.keys(path_map) |> Enum.sort() |> List.last()
     Map.get(path_map, tgt,  :infinity)
   end
 
-  def process_step(map, path_map, openset, from, to_process)
-
-  def process_step(_map, path_map, openset, _from, []) do
-    {path_map, openset}
+  @spec manhattan(coordinate(), coordinate())::integer()
+  # For specific usecase. We only measure until the end, so c > x and d > y!
+  def manhattan({x,y}, {c,d}) do
+    (c - x) + (d - y)
   end
 
-  def process_step(map, path_map, openset, from, [hd|tl]) do
-    cmp = Map.get(path_map, hd, :infinity)
-    from_dist = Map.get(path_map, from)
-    tgt_dist = from_dist + Map.get(map, hd)
-    if tgt_dist < cmp do
-      new_path_map = Map.put(path_map, hd, tgt_dist)
-      new_openset = [hd|openset]
-      process_step(map, new_path_map, new_openset, from, tl)
-      # found better path
+  @spec compute_all_paths(%{coordinate() => integer})::%{coordinate() => integer()}
+  def compute_all_paths(map) do
+    start = {0,0}
+    goal = Map.keys(map) |> Enum.sort() |> List.last()
+    openset = [start]
+    camefrom = %{}
+    gScore = %{start => 0}
+    fScore = %{start => manhattan(start, goal)}
+    a_star(map, camefrom, gScore, fScore, goal, openset)
+  end
+
+  @spec a_star_inner(
+    %{coordinate() => integer}, #map
+    coordinate(), #current
+    coordinate(), #goal
+    %{coordinate() => coordinate()}, #camefrom
+    %{coordinate() => integer()}, #gScore
+    %{coordinate() => integer()}, #fScore
+    [coordinate()], #openset
+    [coordinate()]  #neighbours
+  )::%{coordinate() => integer()}
+  def a_star_inner(map, current, goal, camefrom, gScore, fScore, openset, neighboars)
+
+  def a_star_inner(_map, _current, _goal, camefrom, gScore, fScore, openset, []) do
+    {camefrom, gScore, fScore, openset}
+  end
+
+
+  def a_star_inner(map, current, goal, camefrom, gScore, fScore, openset, [nb|nb_tl]) do
+    tentative_gScore = gScore[current] + map[nb]
+    if tentative_gScore < Map.get(gScore, nb, :infinity) do
+      a_star_inner(
+        map,
+        current,
+        goal,
+        Map.put(camefrom, nb, current),
+        Map.put(gScore, nb, tentative_gScore),
+        Map.put(fScore, nb, tentative_gScore + manhattan(nb, goal)),
+        [nb|openset],
+        nb_tl)
     else
-      # found worse path
-      process_step(map, path_map, openset, from, tl)
+      a_star_inner(map, current, goal, camefrom, gScore, fScore, openset, nb_tl)
     end
   end
 
-  @spec compute_all_paths(
-    %{coordinate() => integer()},
-    %{coordinate() => [coordinate()]},
-    %{coordinate() => integer()},
-    [coordinate()]
+  @spec a_star(
+    %{coordinate() => integer}, #map
+    %{coordinate() => coordinate()}, #camefrom
+    %{coordinate() => integer()}, #gScore
+    %{coordinate() => integer()}, #fScore
+    coordinate(),   #goal
+    [coordinate()]  #openset
   )::%{coordinate() => integer()}
-  def compute_all_paths(map, neighbourmap\\%{}, path_map\\%{}, openset\\Nil)
+  def a_star(map, camefrom, gScore, fScore, goal, openset)
 
-  def compute_all_paths(map, _neighbourmap, _path_map, Nil) do
-    IO.inspect("Initialising npm and map")
-    new_path_map = %{{0,0} => 0}
-    new_map = Map.put(map, {0,0}, 0)
-
-    IO.inspect("Generating neighbourmap")
-    max = Map.keys(map) |> Enum.sort() |> List.last()
-    neighbourmap = generate_neighbourmap(max)
-
-    IO.inspect("computing ...")
-    compute_all_paths(new_map, neighbourmap, new_path_map, [{0,0}])
+  def a_star(_map, _camefrom, gScore, _fScore, _goal, []) do
+    gScore
   end
 
-  def compute_all_paths(_map, _neighbourmap, path_map, []) do
-    path_map
+  def a_star(_map, _camefrom, gScore, _fScore, goal, [goal|_]) do
+    gScore
   end
 
-  def compute_all_paths(map, neighbourmap, path_map, [from|openset]) do
-      to_process = neighbourmap[from]
-      {new_path_map, new_openset} = process_step(map, path_map, openset, from, to_process)
-      compute_all_paths(map, neighbourmap, new_path_map, new_openset)
+  def a_star(map, camefrom, gScore, fScore, goal, [current|openset]) do
+    {camefrom, gScore, fScore, openset} = a_star_inner(map, current, goal, camefrom, gScore, fScore, openset, get_neighbours(current, goal))
+    openset = openset |> Enum.sort(fn x, y -> fScore[x] <= fScore[y] end) |> Enum.uniq()
+    a_star(map, camefrom, gScore, fScore, goal, openset)
   end
 end
