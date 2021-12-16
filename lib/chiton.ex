@@ -66,7 +66,6 @@ defmodule Chiton do
     {camefrom, gScore, fScore, openset}
   end
 
-
   def a_star_inner(map, current, goal, camefrom, gScore, fScore, openset, [nb|nb_tl]) do
     tentative_gScore = gScore[current] + map[nb]
     if tentative_gScore < Map.get(gScore, nb, :infinity) do
