@@ -13,7 +13,6 @@ defmodule Packet do
   @spec calculate_value(Packet.t())::integer()
   def calculate_value(packet)
   def calculate_value(%Packet{id: 0, children: children}), do: Enum.sum(Enum.map(children, &calculate_value/1))
-  def calculate_value(%Packet{id: 1, children: [child]}), do: calculate_value(child)
   def calculate_value(%Packet{id: 1, children: children}), do: Enum.product(Enum.map(children, &calculate_value/1))
   def calculate_value(%Packet{id: 2, children: children}), do: Enum.min(Enum.map(children, &calculate_value/1))
   def calculate_value(%Packet{id: 3, children: children}), do: Enum.max(Enum.map(children, &calculate_value/1))
@@ -33,7 +32,7 @@ defmodule Decoder do
   end
 
   @spec bits_to_int([bit()])::integer()
-  def bits_to_int(bits) do: Enum.join(bits, "") |> String.to_integer(2)
+  def bits_to_int(bits), do: Enum.join(bits, "") |> String.to_integer(2)
 
   @spec pop_value([bit()], [bit()])::{[bit()], [bit()]}
   def pop_value(bits, acc)
