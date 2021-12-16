@@ -42,17 +42,15 @@ defmodule Testing do
   end
 
   def test_calc({source, expected}) do
-    IO.inspect("Processing: [#{source}] expecting: #{expected}")
     bits = Decoder.hex_to_bits(source)
     {packet, _leftover} = Decoder.decode(bits)
-    IO.inspect packet
     assert Packet.calculate_value(packet) == expected
   end
 
   test "example_calculations" do
     [
       {"C200B40A82", 3},
-      #{"04005AC33890", 54}, # WHY IS THIS NOT PARSING RIGHT?
+      {"04005AC33890", 54},
       {"880086C3E88112", 7},
       {"CE00C43D881120", 9},
       {"D8005AC2A8F0", 1},
