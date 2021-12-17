@@ -14,12 +14,5 @@ defmodule Shot do
   def in_target(xp,yp,0,yv,x1,x2,y1,y2), do: in_target(xp, yp+yv, 0, yv-1, x1, x2, y1, y2)
   def in_target(xp,yp,xv,yv,x1,x2,y1,y2), do: in_target(xp+xv, yp+yv, xv-1, yv-1, x1, x2, y1, y2)
 end
-
-for xv <- 1..x2 do
-  for yv <- y1..(1-y1) do
-    Shot.in_target(0,0,xv,yv,x1,x2,y1,y2)
-  end
-end
-|> List.flatten()
-|> Enum.count(&(&1))
-|> IO.inspect()
+for xv <- 1..x2, yv <- y1..(1-y1) do Shot.in_target(0,0,xv,yv,x1,x2,y1,y2) end
+|> Enum.count(&(&1)) |> IO.inspect()
