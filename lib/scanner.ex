@@ -11,25 +11,20 @@ defmodule Scanner do
   }
 
   def split_n_toi(x), do: String.split(x, ",", trim: true) |> Enum.map(&String.to_integer/1)
-
-  def from_strings([_label | coords]) do
-    %Scanner{coords: Enum.map(coords, &split_n_toi/1)}
-  end
+  def from_strings([_label | coords]), do: %Scanner{coords: Enum.map(coords, &split_n_toi/1)}
 
   @spec turns()::[coord()]
-  defp turns() do
-    [ [1,2,3], [-2,1,3], [-1,-2,3], [2,-1,3], [1, -3, 2], [3, 1, 2], [-1, 3, 2], [-3, -1, 2],
-      [1, 3, -2], [-3, 1, -2], [-3, -1, -2], [-1,-3, -2], [3,-1, -2], [1, -2, -3], [2, 1, -3],
-      [-1, 2, -3], [-2, -1, -3], [-3, 2, 1], [-2, -3, 1], [3, -2, 1], [2, 3, 1], [3, 2, -1],
-      [-2, 3, -1], [-3,-2,-1],[2,-3,-1]]
-  end
+  defp turns(), do: [
+    [1,2,3], [-2,1,3], [-1,-2,3], [2,-1,3], [1, -3, 2], [3, 1, 2], [-1, 3, 2], [-3, -1, 2],
+    [1, 3, -2], [-3, 1, -2], [-3, -1, -2], [-1,-3, -2], [3,-1, -2], [1, -2, -3], [2, 1, -3],
+    [-1, 2, -3], [-2, -1, -3], [-3, 2, 1], [-2, -3, 1], [3, -2, 1], [2, 3, 1], [3, 2, -1],
+    [-2, 3, -1], [-3,-2,-1],[2,-3,-1]]
 
   @spec rot(coord(), coord())::coord()
-  defp rot(coord, [a,b,c]) do
-    [Enum.at(coord, abs(a)-1) * div(a, abs(a)),
-     Enum.at(coord, abs(b)-1) * div(b, abs(b)),
-     Enum.at(coord, abs(c)-1) * div(c, abs(c))]
-  end
+  defp rot(coord, [a,b,c]), do: [
+    Enum.at(coord, abs(a)-1) * div(a, abs(a)),
+    Enum.at(coord, abs(b)-1) * div(b, abs(b)),
+    Enum.at(coord, abs(c)-1) * div(c, abs(c))]
 
   @spec rotate(Scanner.t(), coord())::Scanner.t()
   def rotate(scanner, rotation), do: %Scanner{coords: Enum.map(scanner.coords, &(rot(&1, rotation))), rotation: rotation}
@@ -78,23 +73,19 @@ defmodule Scanner do
     }
   end
 
-  @spec rec2([Scanner.t()], [Scanner.t()])::[Scanner.t()]
-  def rec2(aligned, []), do: aligned
-  def rec2(aligned, to_align) do
+  @spec reconstruct([Scanner.t()], [Scanner.t()])::[Scanner.t()]
+  def reconstruct(aligned, []), do: aligned
+  def reconstruct(aligned, to_align) do
     {fitting, distance, rotation} = find_fit(aligned, to_align)
     to_align = to_align -- [fitting]
     aligned = [rot_and_mov(fitting, distance, rotation) |aligned]
-    rec2(aligned, to_align)
+    reconstruct(aligned, to_align)
   end
 
   @spec reconstruct([Scanner.t()])::[Scanner.t()]
-  def reconstruct([start|rest]) do
-    rec2([start], rest)
-  end
+  def reconstruct([start|rest]), do: reconstruct([start], rest)
 
-  def reduce_scanners(scanner, acc) do
-    acc ++ scanner.coords
-  end
+  def reduce_scanners(scanner, acc), do: acc ++ scanner.coords
 
   def manhattan([a1,a2,a3], [b1, b2, b3]), do: abs(a1 - b1) + abs(a2 - b2) + abs(a3 - b3)
   def manhattan(%Scanner{offset: a}, %Scanner{offset: b}), do: manhattan(a,b)
