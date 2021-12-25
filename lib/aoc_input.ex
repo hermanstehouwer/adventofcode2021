@@ -72,4 +72,22 @@ defmodule AOC_input do
     |> to_coord_map_ints(0)
     |> Map.new()
   end
+
+  def to_coord_map_chars(data, num)
+
+  def to_coord_map_chars([], _num) do
+    []
+  end
+  def to_coord_map_chars([hd|tl], y) do
+    out = String.split(hd, "", trim: true)
+    |> Enum.zip(0..String.length(hd))
+    |> Enum.map(fn {a,x} -> {{x,y},a} end)
+    out ++ to_coord_map_chars(tl, y+1)
+  end
+
+  def get_day_coord_map_chars(day) do
+    get_day_simple(day)
+    |> to_coord_map_chars(0)
+    |> Map.new()
+  end
 end
